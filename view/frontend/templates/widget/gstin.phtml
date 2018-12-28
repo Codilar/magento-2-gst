@@ -1,0 +1,18 @@
+<?php
+/**
+ * @var \Codilar\Gst\Block\Customer\Widget\Custom $block
+ */
+?>
+<div class="field custom">
+    <label class="label" for="<?php echo $block->escapeHtml($block->getFieldId()); ?>">
+        <span><?php echo $block->escapeHtml($block->getFieldLabel()); ?></span></label>
+    <div class="control">
+        <input type="text"
+               name="<?php echo $block->escapeHtml($block->getFieldName()); ?>"
+               value="<?php echo $block->escapeHtml($block->getValue()) ?>"
+               title="<?php echo $block->escapeHtml($block->getFieldLabel()); ?>"
+               class="input-text"
+               id="<?php echo $block->escapeHtml($block->getFieldId()); ?>"
+        >
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php
+/**
+ * @var \Magento\Sales\Block\Adminhtml\Order\View\Items $block
+ */
+$_order = $block->getOrder();
+/**
+ *
+ * @var $_gstHelper \Codilar\Gst\Helper\Data
+ */
+$_gstHelper = $this->helper('Codilar\Gst\Helper\Data');
+$productionState = $_gstHelper->getProductionState();
+$moduleStatus = $_gstHelper->getModuleStatus();
+$productionState = str_replace(' ', '', strtolower($productionState));
+$orderDate = $_order->getCreatedAt();
+$orderDate = date_create($orderDate);
+$date = "2017-06-30 11:59:59";
+$gstDate=date_create($date);
+$gstOrderStatus = false;
+if($gstDate < $orderDate){
+    $gstOrderStatus = true;
+}
+$state = $_order->getShippingAddress()->getRegion();
+$state = str_replace(' ', '', strtolower($state));
+?>
+<div class="admin__table-wrapper">
+    <table class="data-table admin__table-primary edit-order-table">
+        <thead>
+        <tr class="headings">
+            <?php $i = 0;
+            $columns = $block->getColumns();
+            $lastItemNumber = count($columns) ?>
+            <?php foreach ($columns as $columnName => $columnTitle):?>
+                <?php $i++; ?>
+                <?php if($columnName=="tax-amount" && $moduleStatus): ?>
+                    <?php if(($state==$productionState) && $gstOrderStatus): ?>
+                        <th class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo "SGST" ?></span></th>
+                        <th class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo "CGST" ?></span></th>
+                    <?php elseif($gstOrderStatus): ?>
+                        <th class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo "IGST" ?></span></th>
+                    <?php endif; ?>
+                <?php elseif($columnName=="product" && $moduleStatus): ?>
+                    <th class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo $columnTitle ?></span></th>
+                    <th class="col-hsn<?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo "HSN" ?></span></th>
+                <?php else: ?>
+                    <th class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo $columnTitle ?></span></th>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+        </tr>
+        </thead>
+        <?php $_items = $block->getItemsCollection();?>
+        <?php $i = 0; foreach ($_items as $_item):?>
+            <?php if ($_item->getParentItem()) {
+                continue;
+            } else {
+                $i++;
+            }?>
+            <tbody class="<?php /* @noEscape */ echo $i%2 ? 'even' : 'odd' ?>">
+            <?php echo $block->getItemHtml($_item) ?>
+            <?php echo $block->getItemExtraInfoHtml($_item) ?>
+            </tbody>
+        <?php endforeach; ?>
+    </table>
+</div>

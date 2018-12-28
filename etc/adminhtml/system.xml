@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Codilar Technologies Pvt. Ltd.
+ * @category    Codilar_Gst Extension
+ * @package    Codilar\Gst\etc\adminhtml
+ * @copyright   Copyright (c) 2017 Codilar. (http://www.codilar.com)
+ * @purpose     system configuration for gst configuration
+ * @author       Codilar Team
+ **/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
+    <system>
+        <!-- Add Codilar Tab -->
+        <tab id="codilar" translate="label" sortOrder="300">
+            <label>Codilar</label>
+        </tab>
+        <!-- End of Codilar Tab -->
+        <!-- Add GST Section -->
+        <section id="gst" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>GST</label>
+            <tab>codilar</tab>
+            <!-- resource tag name which we have to defined in the acl.xml -->
+            <resource>Codilar_Gst::system_config</resource>
+
+            <!-- Adding GST Group -->
+            <group id="codilar" translate="label" type="text" sortOrder="1" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>GST Extension</label>
+                <field id="status" translate="label" type="select" sortOrder="1"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable This Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="gstin" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>GSTIN</label>
+                </field>
+                <field id="production_state" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production State</label>
+                </field>
+
+                <field id="shipping_status" translate="label" type="select" sortOrder="5"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Shipping GST</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <!-- End of Adding GST Group -->
+        </section>
+        <!-- End of GST Section -->
+    </system>
+</config>

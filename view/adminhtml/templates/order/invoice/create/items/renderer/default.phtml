@@ -1,0 +1,79 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block \Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer */ ?>
+<?php
+$_item = $block->getItem();
+$_order = $block->getOrder();
+/**
+ *
+ * @var $_gstHelper \Codilar\Gst\Helper\Data
+ */
+$_gstHelper = $this->helper('Codilar\Gst\Helper\Data');
+$productionState = $_gstHelper->getProductionState();
+$moduleStatus = $_gstHelper->getModuleStatus();
+$productionState = str_replace(' ', '', strtolower($productionState));
+$orderDate = $_order->getCreatedAt();
+$orderDate = date_create($orderDate);
+$date = "2017-06-30 11:59:59";
+$gstDate=date_create($date);
+$gstOrderStatus = false;
+if($gstDate < $orderDate){
+    $gstOrderStatus = true;
+}
+$state = $_order->getShippingAddress()->getRegion();
+$state = str_replace(' ', '', strtolower($state));
+$igst_percent = $_item->getOrderItem()->getTaxPercent()+0;
+$sgst_percent = $igst_percent/2;
+$productData = $_gstHelper->getProductById($_item->getProductId());
+$productHsn = $productData->getHsn();
+?>
+<?php $block->setPriceDataObject($_item)?>
+<td class="col-product"><?php echo $block->getColumnHtml($_item, 'name') ?></td>
+<?php if($moduleStatus): ?>
+    <td class="col-hsn"><?php echo $productHsn; ?></td>
+<?php endif; ?>
+<td class="col-price">
+    <?php echo $block->getColumnHtml($_item, 'price'); ?>
+</td>
+<td class="col-qty"><?php echo $block->getColumnHtml($_item, 'qty') ?></td>
+<td class="col-qty-invoice">
+    <?php if ($block->canEditQty()) : ?>
+        <input type="text" class="input-text admin__control-text qty-input"
+               name="invoice[items][<?php /* @escapeNotVerified */ echo $_item->getOrderItemId() ?>]"
+               value="<?php /* @escapeNotVerified */ echo $_item->getQty()*1 ?>"/>
+    <?php else : ?>
+        <?php /* @escapeNotVerified */ echo $_item->getQty()*1 ?>
+    <?php endif; ?>
+</td>
+<td class="col-subtotal">
+    <?php echo $block->getColumnHtml($_item, 'subtotal'); ?>
+</td>
+<?php if(($state==$productionState) && $gstOrderStatus && $moduleStatus):
+    $originalTaxAmount = $_item->getTaxAmount();
+    $taxAmount = $originalTaxAmount / 2;
+    $_item->setTaxAmount($taxAmount);?>
+    <td class="col-sgst"><?php /* @escapeNotVerified */ echo $block->displayPriceAttribute('tax_amount') ?>
+        (<?php /* @escapeNotVerified */ echo $sgst_percent.'%'; ?>)
+    </td>
+    <td class="col-cgst"><?php /* @escapeNotVerified */ echo $block->displayPriceAttribute('tax_amount') ?>
+        (<?php /* @escapeNotVerified */ echo $sgst_percent.'%'; ?>)
+    </td>
+    <?php $_item->setTaxAmount($originalTaxAmount); ?>
+<?php elseif($gstOrderStatus && $moduleStatus): ?>
+    <td class="col-igst"><?php /* @escapeNotVerified */ echo $block->displayPriceAttribute('tax_amount') ?>
+        (<?php /* @escapeNotVerified */ echo $igst_percent.'%'; ?>)
+    </td>
+<?php else: ?>
+    <td class="col-tax"><?php /* @escapeNotVerified */ echo $block->displayPriceAttribute('tax_amount') ?></td>
+<?php endif; ?>
+<td class="col-discount"><?php /* @escapeNotVerified */ echo $block->displayPriceAttribute('discount_amount') ?></td>
+<td class="col-total last">
+    <?php echo $block->getColumnHtml($_item, 'total'); ?>
+</td>

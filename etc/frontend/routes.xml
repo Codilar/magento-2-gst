@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Codilar Technologies Pvt. Ltd.
+ * @category    Codilar_Gst Extension
+ * @package    Codilar\Gst\etc\frontend
+ * @copyright   Copyright (c) 2017 Codilar. (http://www.codilar.com)
+ * @purpose     frontname configuration
+ * @author       Codilar Team
+ **/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/App/etc/routes.xsd">
+    <router id="standard">
+        <route id="codilar_gst" frontName="codilar_gst">
+            <module name="Codilar_Gst" />
+        </route>
+    </router>
+</config>

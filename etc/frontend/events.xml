@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Codilar Technologies Pvt. Ltd.
+ * @category    Codilar_Gst Extension
+ * @package    Codilar\Gst\etc\frontend
+ * @copyright   Copyright (c) 2017 Codilar. (http://www.codilar.com)
+ * @purpose     List of Event listeners
+ * @author       Codilar Team
+ **/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name='checkout_onepage_controller_success_action'>
+        <observer name='sending_tax_amount_custom' instance='Codilar\Gst\Observer\SaveTax' />
+    </event>
+</config>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Codilar Technologies Pvt. Ltd.
+ * @category    Codilar_Gst Extension
+ * @package    Sales_order_creditmemo_view
+ * @copyright   Copyright (c) 2017 Codilar. (http://www.codilar.com)
+ * @purpose     Overriding core creditmemo file for adding gst fields
+ * @author       Codilar Team
+ **/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="creditmemo_items">
+            <action method="setTemplate" ifconfig="gst/codilar/status">
+                <argument name="template" xsi:type="string">Codilar_Gst::order/creditmemo/view/items.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock as="default">
+            <action method="setTemplate" ifconfig="gst/codilar/status">
+                <argument name="template" xsi:type="string">Codilar_Gst::order/creditmemo/view/items/renderer/default.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="tax">
+            <action method="setTemplate" ifconfig="gst/codilar/status">
+                <argument name="template" xsi:type="string">Codilar_Gst::order/totals/tax.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

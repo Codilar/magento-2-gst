@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * Codilar Technologies Pvt. Ltd.
+ * @category    Codilar_Gst Extension
+ * @package    order/tax.phtml
+ * @copyright   Copyright (c) 2017 Codilar. (http://www.codilar.com)
+ * @purpose     template file for adding gst total
+ * @author       Codilar Team
+ **/
+?>
+<?php
+    /**
+     * @var $blockObj \Codilar\Gst\Block\Adminhtml\ProductionState
+     */
+        $_order  = $block->getOrder();
+    /**
+     *
+     * @var $_gstHelper \Codilar\Gst\Helper\Data
+     */
+    $_gstHelper = $this->helper('Codilar\Gst\Helper\Data');
+    $productionState = $_gstHelper->getProductionState();
+    $shippingGstStatus = $_gstHelper->getShippingGstStatus();
+    $productionState = str_replace(' ', '', strtolower($productionState));
+    $orderDate = $_order->getCreatedAt();
+    $orderDate = date_create($orderDate);
+    $date = "2017-06-30 11:59:59";
+    $gstDate=date_create($date);
+    $gstOrderStatus = false;
+    if($gstDate < $orderDate){
+        $gstOrderStatus = true;
+    }
+    $state = $_order->getShippingAddress()->getRegion();
+    $state = str_replace(' ', '', strtolower($state));
+    $_source = $block->getSource();
+    $shippingTaxAmount = $_order->getShippingTaxAmount();
+    $totalGst = $_source->getTaxAmount();
+    $sgst = $totalGst/2;
+    $igst = $totalGst;
+    $_fullInfo = $this->helper('Magento\Tax\Helper\Data')->getCalculatedTaxes($_source);
+    global $taxIter; $taxIter++;
+?>
+
+<?php if ($_fullInfo && $block->displayFullSummary()): ?>
+
+    <?php
+        if($state==$productionState && $gstOrderStatus){
+            $state_title = "SGST";
+            $central_title = "CGST";
+            ?>
+            <tr class="totals tax details details-1 <?php echo($block->getIsPlaneMode()) ? ' plane' : '';?>">
+                <td <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?>>
+                    <?php echo $block->escapeHtml($state_title); ?>
+                    <br />
+                </td>
+                <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> rowspan="1">
+                    <?php /* @escapeNotVerified */ echo $_order->formatPrice($sgst); ?>
+                </td>
+            </tr>
+
+            <tr class="totals tax details details-2 <?php echo($block->getIsPlaneMode()) ? ' plane' : '';?>">
+                <td <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?>>
+                    <?php echo $block->escapeHtml($central_title); ?>
+                    <br />
+                </td>
+                <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> rowspan="1">
+                    <?php /* @escapeNotVerified */ echo $_order->formatPrice($sgst); ?>
+                </td>
+            </tr>
+            <?php
+            }
+            else if($gstOrderStatus){
+                $title = "IGST";
+                ?>
+                <tr class="totals tax details details-1 <?php echo($block->getIsPlaneMode()) ? ' plane' : '';?>">
+                    <td <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?>>
+                        <?php echo $block->escapeHtml($title); ?>
+                        <br />
+                    </td>
+                    <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> rowspan="1">
+                        <?php /* @escapeNotVerified */ echo $_order->formatPrice($igst); ?>
+                    </td>
+                </tr>
+                <?php
+            }
+            else{
+                $title = "Tax Amount";
+                ?>
+                <tr class="totals tax details details-1 <?php echo($block->getIsPlaneMode()) ? ' plane' : '';?>">
+                    <td <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?>>
+                        <?php echo $block->escapeHtml($title); ?>
+                        <br />
+                    </td>
+                    <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> rowspan="1">
+                        <?php /* @escapeNotVerified */ echo $_order->formatPrice($totalGst); ?>
+                    </td>
+                </tr>
+                <?php
+            }
+
+        ?>
+        <?php if($shippingGstStatus && $shippingTaxAmount > 0): ?>
+            <tr class="totals-shipping-tax">
+                <th <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?> scope="row">
+                    <?php /* @escapeNotVerified */ echo __('Shipping GST'); ?>
+                </th>
+                <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> data-th="<?php echo $block->escapeHtml(__('Shipping GST')); ?>">
+                    <?php /* @escapeNotVerified */ echo $_order->formatPrice($shippingTaxAmount) ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+        <?php foreach ($_fullInfo as $info): ?>
+            <?php
+                $percent    = $info['percent'];
+                $amount     = $info['tax_amount'];
+                $baseAmount = $info['base_tax_amount'];
+                $title      = $info['title'];
+            ?>
+        <?php endforeach; ?>
+<?php endif;?>
+
+<?php if ($block->displayFullSummary() && $_fullInfo && !$block->getIsPlaneMode()): ?>
+<tr class="totals-tax-summary">
+<?php elseif ($block->displayFullSummary() && $_fullInfo && $block->getIsPlaneMode()): ?>
+<tr class="totals-tax-summary plane">
+<?php else: ?>
+<tr class="totals-tax">
+<?php endif; ?>
+    <th <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?> scope="row">
+        <?php if ($block->displayFullSummary()): ?>
+            <div class="detailed"><?php /* @escapeNotVerified */ echo __('Total GST'); ?></div>
+        <?php else: ?>
+            <?php /* @escapeNotVerified */ echo __('Total GST'); ?>
+        <?php endif;?>
+    </th>
+    <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> data-th="<?php echo $block->escapeHtml(__('Total GST')); ?>">
+        <?php /* @escapeNotVerified */ echo $_order->formatPrice($totalGst) ?>
+    </td>
+
+</tr>

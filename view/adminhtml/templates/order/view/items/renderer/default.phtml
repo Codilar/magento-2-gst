@@ -1,0 +1,57 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var \Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer $block */ ?>
+<?php $_item = $block->getItem();
+$_order = $block->getOrder();
+/**
+ *
+ * @var $_gstHelper \Codilar\Gst\Helper\Data
+ */
+$_gstHelper = $this->helper('Codilar\Gst\Helper\Data');
+$productionState = $_gstHelper->getProductionState();
+$moduleStatus = $_gstHelper->getModuleStatus();
+$productionState = str_replace(' ', '', strtolower($productionState));
+$orderDate = $_order->getCreatedAt();
+$orderDate = date_create($orderDate);
+$date = "2017-06-30 11:59:59";
+$gstDate=date_create($date);
+$gstOrderStatus = false;
+if($gstDate < $orderDate){
+    $gstOrderStatus = true;
+}
+$state = $_order->getShippingAddress()->getRegion();
+$state = str_replace(' ', '', strtolower($state));
+?>
+<?php $block->setPriceDataObject($_item) ?>
+<tr>
+    <?php $i = 0;
+    $columns = $block->getColumns();
+    $lastItemNumber = count($columns) ?>
+    <?php foreach ($columns as $columnName => $columnClass):?>
+        <?php $i++; ?>
+        <?php if($columnName=="tax-amount" && $moduleStatus): ?>
+            <?php if(($state==$productionState) && $gstOrderStatus): ?>
+                <td class="<?php echo /* @noEscape */ $columnClass?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, "sgst") ?>
+                    (<?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, 'state-tax-percent') ?>)</td>
+                <td class="<?php echo /* @noEscape */ $columnClass?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, "sgst") ?>
+                    (<?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, 'state-tax-percent') ?>)</td>
+            <?php elseif($gstOrderStatus): ?>
+                <td class="<?php echo /* @noEscape */ $columnClass?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, $columnName) ?>
+                    (<?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, 'tax-percent') ?>)</td>
+            <?php endif; ?>
+        <?php elseif($columnClass=="col-product" && $moduleStatus): ?>
+            <td class="<?php echo /* @noEscape */ $columnClass?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, $columnName) ?></td>
+            <td class="col-hsn <?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, "hsn") ?></td>
+        <?php else: ?>
+            <td class="<?php echo /* @noEscape */ $columnClass?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, $columnName) ?></td>
+        <?php endif; ?>
+
+    <?php endforeach; ?>
+</tr>
