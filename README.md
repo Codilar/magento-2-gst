@@ -6,8 +6,13 @@ Magento 2 GST Extension for Indian store owners to manage GST as per government 
 
 ### Magento Supported Versions
 > Magento 2.0.x
+
 > Magento 2.1.x
+
 > Magento 2.2.x
+
+> Magento 2.3.x
+
 
 ## Installation
 
@@ -17,6 +22,8 @@ Magento 2 GST Extension for Indian store owners to manage GST as per government 
     $ composer require codilar/gst
     $ bin/magento setup:upgrade
     $ bin/magento setup:static-content:deploy -f
+
+> Fix file permission and owner if required
 
 > Navigate to Magento admin → Stores → Configuration → Codilar → GST to
 > make sure GST extension is installed properly.
