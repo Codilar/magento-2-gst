@@ -1,4 +1,4 @@
-# Magento 2 GST Extension for India
+# Magento 2 GST Extension for India (FREE)
 [![Codilar](https://www.codilar.com/codilar-logo.png)](https://www.codilar.com/)
 
 ## Introduction
