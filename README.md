@@ -3,7 +3,21 @@
 [![Codilar](https://www.codilar.com/codilar-logo.png)](https://www.codilar.com/)
 
 ## Introduction
-Magento 2 GST Extension for Indian store owners to manage GST as per government of India rules
+
+This Magento GST extension can help to easily configure Magento stores with GST rules according to Indian government regulations. GST splits – CGST, SGST and IGST in various formats including invoices, PDFs, orders, and reports can be generated.  
+
+Our extension works perfectly for all e-commerce transactions across various product types and categories. Setting up GST with different tax slabs in online stores can be easily done using Magento's taxation architecture of tax classes, rates, and zones.
+
+### Significant features of Magento GST extension
+
+ - Admins can configure GST number to specific stores. 
+ - Invoices and order templates that comply with GST standards are updated.
+ - Respective GST number will be attached to all invoice and order emails. 
+ - For clear display of SGST, CGST and IGST, separate columns are used. 
+ - SGCT, CGST and IGST will be calculated and added to all corresponding transactional emails and PDFs automatically.
+ - In admin panel and order PDF, GST columns for order email are added according to the standard format issued by Government of India.
+ - Optional buyer level GSTIN and an option to display HSN value in invoice are included. 
+ - In all transactional emails and PDFs, the word “TAX” can be replaced with the word “GST”.
 
 ### Magento Supported Versions
 > Magento 2.0.x
